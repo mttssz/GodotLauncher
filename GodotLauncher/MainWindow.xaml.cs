@@ -1,7 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Collections.Generic;
+
+using GodotLauncher.Classes;
 
 namespace GodotLauncher
 {
@@ -11,44 +15,19 @@ namespace GodotLauncher
     public partial class MainWindow
     {
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        
-        public MainWindow()
+        private readonly GodotVersionStorage versionStorage;
+
+        public MainWindow(GodotVersionStorage versionStorage)
         {
             InitializeComponent();
+            this.versionStorage = versionStorage;
         }
 
         private void Start_Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            string uri = FindResource("SourceUrlBase").ToString();
-            var request = WebRequest.Create(uri);
-            var response = request.GetResponse();
-            var regex = new Regex("<a href=\"*.*\">(?<name>.*)</a>/");
-            var versionRegex = new Regex(@"^\d+\.\d+\.?\d*$");
+            string valami = null;
 
-            using(var reader = new StreamReader(response.GetResponseStream()))
-            {
-                string result = reader.ReadToEnd();
-                var matches = regex.Matches(result);
-
-                if (matches.Count == 0)
-                {
-                    logger.Error($"Parsing {uri} response failed.");
-                    return;
-                }
-
-                string files = string.Empty;
-                foreach(Match match in matches)
-                {
-                    if (!match.Success)
-                        continue;
-
-                    string dirName = match.Groups["name"].ToString();
-                    if (versionRegex.IsMatch(dirName)) 
-                        files += dirName + "\n";
-                }
-
-                MessageBox.Show(files);
-            }
+            valami.Trim();
         }
 
         private void Configure_Button_Click(object sender, System.Windows.RoutedEventArgs e)

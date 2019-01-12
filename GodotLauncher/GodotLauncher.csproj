@@ -71,7 +71,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\CommonUtils.cs" />
     <Compile Include="Classes\EnvironmentSettings.cs" />
+    <Compile Include="Classes\GodotVersion.cs" />
     <Compile Include="Classes\JsonConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
