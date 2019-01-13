@@ -8,8 +8,10 @@
              Exit="App_OnExit">
     <Application.Resources>
         <ResourceDictionary>
-            <clr:String x:Key="EnvironmentFileName">GodotLauncherEnvironment.json</clr:String>
-            <clr:String x:Key="SourceUrlBase">https://downloads.tuxfamily.org/godotengine/</clr:String>
+            <clr:String x:Key="VersionsFileUrl">https://raw.githubusercontent.com/mttssz/GodotLauncher/master/versions.json</clr:String>
+            <clr:String x:Key="TempDirName">temp</clr:String>
+            <clr:String x:Key="ConfigDirName">config</clr:String>
+            <clr:String x:Key="EnvironmentFileName">environment.json</clr:String>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

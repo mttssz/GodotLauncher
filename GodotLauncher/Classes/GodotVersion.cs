@@ -8,14 +8,14 @@ namespace GodotLauncher.Classes
 {
     public class GodotVersion
     {
-        public long VersionId { get; set; }
+        public int VersionId { get; set; }
 
         public string VersionName { get; set; }
         public string VersionUrl { get; set; }
 
         public int BitNum { get; set; }
 
-        public bool IsMonoVersion { get; set; }
+        public bool IsMono { get; set; }
         public bool IsStable { get; set; }
 
         public string ChangelogUrl { get; set; }
@@ -27,6 +27,15 @@ namespace GodotLauncher.Classes
 
         public List<GodotVersion> AllVersions { get; set; }
 
-        public List<GodotVersion> InstalledVersions { get; set; }
+        public Dictionary<int, string> InstalledVersions { get; set; }
+
+
+        public void ReloadInstalledVersions(string manifestFile)
+        {
+            if (InstalledVersions == null)
+                InstalledVersions = new Dictionary<int, string>();
+
+            InstalledVersions = JsonConverter<Dictionary<int, string>>.Deserialize(manifestFile);
+        }
     }
 }
