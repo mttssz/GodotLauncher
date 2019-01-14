@@ -5,64 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GodotLauncher"
         mc:Ignorable="d"
-        Title="Configure" Height="350" Width="700"
+        Title="Configuration" Height="175" Width="610"
         ResizeMode="NoResize"
-        FontSize="18"
         WindowStartupLocation="CenterScreen"
-        Loaded="Window_Loaded">
+        FontSize="18">
     <Grid Margin="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="428*"></ColumnDefinition>
-            <ColumnDefinition Width="135*"></ColumnDefinition>
-            <ColumnDefinition Width="121*"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-
-        <TextBlock Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Margin="7,0,0,0" >Godot Install Location</TextBlock>
-
-        <Button Name="ChooseInstallLocationButton" Grid.Column="3" Grid.Row="2" Height="40" Width="100" Click="ChooseInstallLocationButton_Click">Choose</Button>
-
-        <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Bottom" Margin="7,0,0,0">Check for updates</TextBlock>
-        <ComboBox Name="UpdateIntervalCombobox" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Height="40" Width="550" VerticalContentAlignment="Center"/>
-        <Button Name="CheckForUpdatesButton" Grid.Row="4" Grid.Column="3" Height="40" Width="100" Click="CheckForUpdatesButton_Click">Check now</Button>
-
-        <Button Name="ApplyButton" Grid.Row="6" Grid.Column="2" Height="40" Width="100" Click="ApplyButton_Click">Apply</Button>
-        <Button Name="CancelButton" Grid.Row="6" Grid.Column="3" Height="40" Width="100" Click="CancelButton_Click">Cancel</Button>
-
-        <TextBox Name="GodotInstallLocationTextbox" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Height="40" Width="550" VerticalContentAlignment="Center"/>
-
-        <StackPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Center">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="7,0,0,0">
-                <CheckBox Name="MonoCB" VerticalAlignment="Center" Margin="0,0,7,0" Click="ComboBox_Click">
-                    <TextBlock Margin="0,-4,0,0">Mono Versions</TextBlock>
-                </CheckBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="7,0,0,0" >
-                <CheckBox Name="X32CB" VerticalAlignment="Center" Margin="0,0,7,0" Click="ComboBox_Click">
-                    <TextBlock Margin="0,-4,0,0" >x32 Versions</TextBlock>
-                </CheckBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="7,0,0,0">
-                <CheckBox Name="X64CB" VerticalAlignment="Center" Margin="0,0,7,0" Click="ComboBox_Click">
-                    <TextBlock Margin="0,-4,0,0">x64 Versions</TextBlock>
-                </CheckBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="7,0,0,0">
-                <CheckBox Name="UnstableCB" VerticalAlignment="Center" Margin="0,0,7,0" Click="ComboBox_Click">
-                    <TextBlock Margin="0,-4,0,0">Unstable Versions</TextBlock>
-                </CheckBox>
-            </StackPanel>
+        <DockPanel Grid.Row="1" LastChildFill="True">
+            <Button Name="BrowseFolderButton" Height="50" Width="50" HorizontalAlignment="Left" Margin="0,0,5,0">...</Button>
+            <TextBox Name="GodotInstallLocationTextbox" Height="50" VerticalContentAlignment="Center" IsReadOnly="True"></TextBox>
+        </DockPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+            <Button Name="ApplyButton" Width="125" Height="50" Margin="0,0,10,0">Apply</Button>
+            <Button Name="CancelButton" Width="125" Height="50">Cancel</Button>
         </StackPanel>
     </Grid>
 </Window>

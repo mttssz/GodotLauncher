@@ -3,7 +3,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace GodotLauncher.Classes
+namespace GodotLauncher.Services
 {
     /// <summary>
     /// Helper class to serialize and deserialize JSON object

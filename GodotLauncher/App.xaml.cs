@@ -1,9 +1,11 @@
-﻿using GodotLauncher.Classes;
+﻿using GodotLauncher.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
+
+using GodotLauncher.DataClasses;
 
 namespace GodotLauncher
 {
@@ -13,8 +15,8 @@ namespace GodotLauncher
     public partial class App
     {
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private GodotVersionStorage versionStorage = new GodotVersionStorage();
-        private ApplicationConfig appConfig;
+        private GodotVersionService versionService = new GodotVersionService();
+        private ApplicationConfig config;
 
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
@@ -32,120 +34,163 @@ namespace GodotLauncher
         {
             logger.Info("GodotLauncher started");
 
-            string versionsFileUrl = FindResource("VersionsFileUrl").ToString();
-
-            if (!IsCurrentDirectoryWriteable())
-                Current.Shutdown();
-
-            SetupEnvironmentDirectories();
-
-            OpenOrCreateConfigFile();
-
-            if (!TryDownloadOrUpdateVersionsFile(versionsFileUrl))
-                Current.Shutdown();
-
-            versionStorage.AllVersions = JsonConverter<List<GodotVersion>>.Deserialize(Constants.VERSIONS_FILE);
-
-            if (appConfig.GodotInstallPath != String.Empty)
-                versionStorage.ReloadInstalledVersions($"{appConfig.GodotInstallPath}\\{Constants.MANIFEST_FILE}");
-
-
             // construct the new window object
-            MainWindow wnd = new MainWindow(versionStorage, appConfig);
+            MainWindow wnd = new MainWindow(config, versionService);
+
+            if (!InitialSetup())
+                Shutdown();
 
             // info log
             // show the window
             wnd.Show();
         }
 
-        private void App_OnExit(object sender, ExitEventArgs e)
+        private bool InitialSetup()
         {
-            JsonConverter<ApplicationConfig>.Serialize(appConfig, Constants.CONFIG_FILE);
+            if (!CheckIfCurrentDirectoryIsWritable())
+                return false;
 
-            // info log
-            logger.Info("GodotLauncher exiting");
+            if (!TryToCreateDirectories())
+                return false;
 
-            // flush the logger
-            NLog.LogManager.Shutdown();
+            if (!ReadOrCreateConfigFile())
+                return false;
+
+            if (!TryToDownloadOrUpdateVersionsFile())
+                return false;
+
+            if (!LoadVersionsFile())
+                return false;
+
+            return true;
         }
 
-        /// <summary>
-        /// Tries to write a temporary file in the application's directory
-        /// </summary>
-        private bool IsCurrentDirectoryWriteable()
+        private bool CheckIfCurrentDirectoryIsWritable()
         {
             try
             {
                 using (var file = File.Create("tmp"))
                 { }
 
-                if (File.Exists("tmp"))
-                    File.Delete("tmp");
+                File.Delete("tmp");
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
-                CommonUtils.PopupExceptionMessage("Write check error", ex);
+                CommonUtils.PopupExceptionMessage("I/O error", ex);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool TryToCreateDirectories()
+        {
+            try
+            {
+                if (!Directory.Exists("config"))
+                    Directory.CreateDirectory("config");
+
+                if (!Directory.Exists("temp"))
+                    Directory.CreateDirectory("temp");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                CommonUtils.PopupExceptionMessage("I/O error", ex);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ReadOrCreateConfigFile()
+        {
+            string configFile = "config\\config.json";
+            try
+            {
+                if (!File.Exists(configFile))
+                {
+                    config = new ApplicationConfig
+                    {
+                        GodotInstallLocation = String.Empty,
+                        Show32BitVersions = true,
+                        Show64BitVersions = true,
+                        ShowMonoVersions = false,
+                        ShowUnstableVersions = false,
+                        LastUpdateChecked = DateTime.Now,
+                        LastSelectedVersion = -1,
+                    };
+
+                    JsonConverter<ApplicationConfig>.Serialize(config, configFile);
+                }
+
+                config = JsonConverter<ApplicationConfig>.Deserialize(configFile);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                CommonUtils.PopupExceptionMessage("Error reading config", ex);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool TryToDownloadOrUpdateVersionsFile()
+        {
+            string url;
+
+            if (File.Exists("config\\versions.json") && (DateTime.Now - config.LastUpdateChecked).TotalDays < 1)
+                return true;
+
+            try
+            {
+                url = FindResource("VersionsFileUrl").ToString();
+
+                DownloadManager.DownloadFileSync(url, "config\\versions.json");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                CommonUtils.PopupExceptionMessage("Error while downloading versions", ex);
+            }
+
+            return true;
+        }
+
+        private bool LoadVersionsFile()
+        {
+            try
+            {
+                versionService.AllVersions = JsonConverter<List<GodotVersion>>.Deserialize("config\\versions.json");
+
+                string installedManifest = $"{config.GodotInstallLocation}\\manifest.json";
+                if (config.GodotInstallLocation != String.Empty && File.Exists(installedManifest))
+                {
+                    versionService.InstalledVersions = JsonConverter<List<GodotVersionInstalled>>.Deserialize(installedManifest);
+                }
+            }
+            catch(Exception ex)
+            {
+                logger.Error(ex);
+                CommonUtils.PopupExceptionMessage("Error loading versions", ex);
 
                 return false;
             }
             return true;
         }
 
-        /// <summary>
-        /// Sets up the enviroment directories for the app
-        /// </summary>
-        private void SetupEnvironmentDirectories()
+        private void App_OnExit(object sender, ExitEventArgs e)
         {
-            if (!Directory.Exists(Constants.TEMP_DIRECTORY))
-                Directory.CreateDirectory(Constants.TEMP_DIRECTORY);
+            // info log
+            logger.Info("GodotLauncher exiting");
 
-            if (!Directory.Exists(Constants.CONFIG_DIRECTORY))
-                Directory.CreateDirectory(Constants.CONFIG_DIRECTORY);
-        }
-
-        private bool TryDownloadOrUpdateVersionsFile(string url)
-        {
-            int minutesSinceLastUpdateCheck = (int)(DateTime.Now - appConfig.LastUpdateChecked).TotalMinutes;
-
-            if (!File.Exists(Constants.CONFIG_FILE) || (appConfig.UpdateCheckInterval != 0 && minutesSinceLastUpdateCheck >= appConfig.UpdateCheckInterval))
-            {
-                try
-                {
-                    DownloadManager.DownloadFileSync(url, Constants.VERSIONS_FILE);
-                }
-                catch(Exception ex)
-                {
-                    logger.Error(ex);
-                    CommonUtils.PopupExceptionMessage("Failed to download versions file", ex);
-
-                    return false;
-                }
-
-                appConfig.LastUpdateChecked = DateTime.Now;
-            }
-
-            return true;
-        }
-
-
-        private void OpenOrCreateConfigFile()
-        {
-            if (File.Exists(Constants.CONFIG_FILE))
-            {
-                appConfig = JsonConverter<ApplicationConfig>.Deserialize(Constants.CONFIG_FILE);
-            }
-            else
-            {
-                appConfig = new ApplicationConfig
-                {
-                    UpdateCheckInterval = 0,
-                    GodotInstallPath = String.Empty,
-                    LastUpdateChecked = DateTime.Now,
-                };
-
-                JsonConverter<ApplicationConfig>.Serialize(appConfig, Constants.CONFIG_FILE);
-            }
+            // flush the logger
+            NLog.LogManager.Shutdown();
         }
     }
 }

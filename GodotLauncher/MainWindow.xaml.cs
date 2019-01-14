@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Controls;
-
-using GodotLauncher.Classes;
 using System.Windows.Media;
+
+using GodotLauncher.DataClasses;
+using GodotLauncher.Services;
 
 namespace GodotLauncher
 {
@@ -18,110 +19,76 @@ namespace GodotLauncher
     public partial class MainWindow
     {
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly GodotVersionStorage versionStorage;
-        private readonly ApplicationConfig appConfig;
+        private ApplicationConfig config;
+        private GodotVersionService versionService;
 
-        public MainWindow(GodotVersionStorage versionStorage, ApplicationConfig appConfig)
+        private const string EMPTY_COMBOBOX_PLACEHOLDER = "No Godot versions found.";
+
+        public MainWindow(ApplicationConfig _config, GodotVersionService _versionService)
         {
             InitializeComponent();
-            this.versionStorage = versionStorage;
-            this.appConfig = appConfig;
 
-            FillVersionComboBox();
+            config = _config;
+            versionService = _versionService;
+
+            FillComboboxWithData();
         }
 
-        private void FillVersionComboBox()
+        private void FillComboboxWithData()
         {
-            GodotVersionsCombobox.Items.Clear();
+            InstalledVersionsCB.Items.Clear();
 
-            GodotVersionsCombobox.DisplayMemberPath = "Value";
-            GodotVersionsCombobox.SelectedValuePath = "Key";
-
-            bool lastSelectedVisible = true;
-
-            foreach(var version in versionStorage.AllVersions)
+            if (versionService.InstalledVersions == null || versionService.InstalledVersions.Count == 0)
             {
-                if (!appConfig.Show32BitVersions && version.BitNum == 32)
-                {
-                    if (appConfig.LastUsedVersion == version.VersionId)
-                        lastSelectedVisible = false;
-                    continue;
-                }
+                InstalledVersionsCB.IsEnabled = false;
+                StartButton.IsEnabled = false;
+                InstalledVersionsCB.Foreground = Brushes.DarkGray;
 
-                if (!appConfig.Show64BitVersions && version.BitNum == 64)
-                {
-                    if (appConfig.LastUsedVersion == version.VersionId)
-                        lastSelectedVisible = false;
-                    continue;
-                }
+                InstalledVersionsCB.Items.Add(new KeyValuePair<int, string>(-1, EMPTY_COMBOBOX_PLACEHOLDER));
+                InstalledVersionsCB.SelectedIndex = 0;
 
-                if (!appConfig.ShowMonoVersions && version.IsMono)
-                {
-                    if (appConfig.LastUsedVersion == version.VersionId)
-                        lastSelectedVisible = false;
-                    continue;
-                }
-
-                if (!appConfig.ShowUnstableVersions && !version.IsStable)
-                {
-                    if (appConfig.LastUsedVersion == version.VersionId)
-                        lastSelectedVisible = false;
-                    continue;
-                }
-
-                string versionName = $"{version.VersionName} - x{version.BitNum}";
-
-                if (version.IsMono)
-                    versionName += " - Mono";
-
-                bool isInstalled = versionStorage.InstalledVersions.ContainsKey(version.VersionId);
-
-                if (isInstalled)
-                {
-                    versionName += " - Installed";
-                }
-                else
-                {
-                    versionName += " - Not installed";
-                }
-
-                var item = new ComboBoxItem();
-                item.Foreground = isInstalled ? Brushes.Black : Brushes.SlateGray;
-                item.Content = new KeyValuePair<int, string>(version.VersionId, versionName);
-
-                GodotVersionsCombobox.Items.Insert(0, new KeyValuePair<int, string>(version.VersionId, versionName));
-                
+                StartButton.Content = FindResource("StartIconInactive");
             }
-
-            if (lastSelectedVisible)
-                GodotVersionsCombobox.SelectedValue = appConfig.LastUsedVersion;
             else
-                GodotVersionsCombobox.SelectedIndex = -1;
+            {
+                InstalledVersionsCB.IsEnabled = true;
+                StartButton.IsEnabled = true;
+                InstalledVersionsCB.Foreground = Brushes.Black;
+
+                StartButton.Content = FindResource("StartIcon");
+
+                foreach(var version in versionService.InstalledVersions)
+                {
+                    InstalledVersionsCB.Items.Add(new KeyValuePair<int, string>(version.VersionId, version.VersionName));
+                }
+
+                InstalledVersionsCB.SelectedValue = config.LastSelectedVersion == -1 ? 0 : config.LastSelectedVersion;
+            }
         }
 
-        private void Start_Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void ConfigButton_Click(object sender, RoutedEventArgs e)
         {
-            appConfig.LastUsedVersion = (int)GodotVersionsCombobox.SelectedValue;
+            var window = new ConfigureWindow
+            {
+                Owner = this,
+            };
+
+            window.ShowDialog();
         }
 
-        private void Configure_Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void DownloadsButton_Click(object sender, RoutedEventArgs e)
         {
-            var cfgWindow = new ConfigureWindow(appConfig);
-            cfgWindow.Owner = this;
-
-            string oldPath = appConfig.GodotInstallPath;
-
-            cfgWindow.ShowDialog();
-
-            if(oldPath != appConfig.GodotInstallPath)
+            var window = new DownloadsWindow
             {
-                versionStorage.ReloadInstalledVersions($"{appConfig.GodotInstallPath}\\{Constants.MANIFEST_FILE}");
-            }
+                Owner = this,
+            };
 
-            if (cfgWindow.ReloadNeeded)
-            {
-                FillVersionComboBox();
-            }
+            window.ShowDialog();
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

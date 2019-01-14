@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace GodotLauncher.Classes
+namespace GodotLauncher.Services
 {
     public static class CommonUtils
     {

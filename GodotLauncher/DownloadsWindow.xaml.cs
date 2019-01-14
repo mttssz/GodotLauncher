@@ -12,16 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-using GodotLauncher.DataClasses;
-
 namespace GodotLauncher
 {
     /// <summary>
-    /// Interaction logic for ConfigureWindow.xaml
+    /// Interaction logic for DownloadsWindow.xaml
     /// </summary>
-    public partial class ConfigureWindow : Window
+    public partial class DownloadsWindow : Window
     {
-        public ConfigureWindow()
+        public DownloadsWindow()
         {
             InitializeComponent();
         }

@@ -5,31 +5,52 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GodotLauncher"
         mc:Ignorable="d"
-        Title="GodotLauncher" Height="450" Width="800"
+        Title="GodotLauncher" Width="1100" Height="525"
         ResizeMode="NoResize"
-        FontSize="18"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        FontSize="18">
     <Window.Resources>
-        <ResourceDictionary>
-            <BitmapImage x:Key="GodotLogo" UriSource="Images/logo.png"></BitmapImage>
-        </ResourceDictionary>
+        <BitmapImage x:Key="GodotLogo" UriSource="Images/logo.png" RenderOptions.BitmapScalingMode="HighQuality"></BitmapImage>
+        <Image x:Key="StartIcon" Source="Images/start.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+        <Image x:Key="WrenchIcon" Source="Images/wrench.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+        <Image x:Key="DownloadsIcon" Source="Images/downloads.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+
+        <Image x:Key="StartIconInactive" Source="Images/start_inactive.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+        <Image x:Key="WrenchIconInactive" Source="Images/wrench_inactive.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+        <Image x:Key="DownloadsIconInactive" Source="Images/downloads_inactive.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,10,10,10"></Setter>
+            <Setter Property="Width" Value="50"></Setter>
+            <Setter Property="Height" Value="50"></Setter>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <!--<Setter Property="Height" Value="{StaticResource CommonControlHeight}"></Setter>-->
+        </Style>
     </Window.Resources>
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*"></ColumnDefinition>
-            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="13*"></ColumnDefinition>
             <ColumnDefinition Width="1*"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="6*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Image Source="{StaticResource GodotLogo}" Grid.ColumnSpan="3" Margin="0,0,10.333,0"/>
-        <ComboBox Name="GodotVersionsCombobox" Grid.Column="0" Grid.Row="1" Width="500" Height="40" VerticalContentAlignment="Center"></ComboBox>
-        <Button Name="Start_Button" Grid.Column="1" Grid.Row="1" Width="125" Height="40" Click="Start_Button_Click">Start</Button>
-        <Button Name="Configure_Button"  Grid.Column="2" Grid.Row="1" Width="125" Height="40" Click="Configure_Button_Click">Configure</Button>
+        <Image Source="{StaticResource GodotLogo}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" VerticalAlignment="Top" Margin="0,10,0,0"></Image>
+        <Button Name="ConfigButton" Grid.Row="1" Grid.Column="2" Click="ConfigButton_Click" Content="{StaticResource WrenchIcon}"></Button>
+        <Button Name="DownloadsButton" Grid.Row="2" Grid.Column="2" VerticalAlignment="Top" Click="DownloadsButton_Click" Content="{StaticResource DownloadsIcon}"></Button>
+        <Button Name="StartButton" Grid.Row="4" Grid.Column="2" Click="StartButton_Click" Content="{StaticResource StartIcon}"></Button>
+
+        <ComboBox Name="InstalledVersionsCB" Grid.Row="4" Grid.Column="1" Height="50" SelectedValuePath="Key" DisplayMemberPath="Value" VerticalContentAlignment="Center"></ComboBox>
     </Grid>
 </Window>
