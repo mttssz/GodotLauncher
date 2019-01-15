@@ -68,7 +68,7 @@ namespace GodotLauncher
 
         private void ConfigButton_Click(object sender, RoutedEventArgs e)
         {
-            var window = new ConfigureWindow
+            var window = new ConfigureWindow(config, versionService)
             {
                 Owner = this,
             };
@@ -78,9 +78,10 @@ namespace GodotLauncher
 
         private void DownloadsButton_Click(object sender, RoutedEventArgs e)
         {
-            var window = new DownloadsWindow(config, versionService);
-
-            window.Owner = this;
+            var window = new DownloadsWindow(config, versionService)
+            {
+                Owner = this,
+            };
 
             window.ShowDialog();
         }

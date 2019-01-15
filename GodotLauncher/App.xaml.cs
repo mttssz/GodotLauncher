@@ -15,8 +15,8 @@ namespace GodotLauncher
     public partial class App
     {
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private GodotVersionService versionService = new GodotVersionService();
-        private ApplicationConfig config;
+        private static GodotVersionService versionService = new GodotVersionService();
+        private static ApplicationConfig config;
 
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
@@ -34,12 +34,12 @@ namespace GodotLauncher
         {
             logger.Info("GodotLauncher started");
 
-            // construct the new window object
-            MainWindow wnd = new MainWindow(config, versionService);
-
             if (!InitialSetup())
                 Shutdown();
 
+            // construct the new window object
+            MainWindow wnd = new MainWindow(config, versionService);
+            
             // info log
             // show the window
             wnd.Show();
@@ -170,9 +170,9 @@ namespace GodotLauncher
 
                 string installedManifest = $"{config.GodotInstallLocation}\\manifest.json";
                 if (config.GodotInstallLocation != String.Empty && File.Exists(installedManifest))
-                {
                     versionService.InstalledVersions = JsonConverter<List<GodotVersionInstalled>>.Deserialize(installedManifest);
-                }
+                else
+                    versionService.InstalledVersions = new List<GodotVersionInstalled>();
             }
             catch(Exception ex)
             {

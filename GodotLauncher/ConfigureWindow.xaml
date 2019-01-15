@@ -17,12 +17,12 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="1" LastChildFill="True">
-            <Button Name="BrowseFolderButton" Height="50" Width="50" HorizontalAlignment="Left" Margin="0,0,5,0">...</Button>
-            <TextBox Name="GodotInstallLocationTextbox" Height="50" VerticalContentAlignment="Center" IsReadOnly="True"></TextBox>
+            <Button Name="BrowseFolderButton" Height="50" Width="50" HorizontalAlignment="Left" Margin="0,0,5,0" Click="BrowseFolderButton_Click">...</Button>
+            <TextBox Name="GodotInstallLocationTextbox" Height="50" VerticalContentAlignment="Center" IsReadOnly="True" Foreground="DarkGray" Padding="10,0,0,0"></TextBox>
         </DockPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-            <Button Name="ApplyButton" Width="125" Height="50" Margin="0,0,10,0">Apply</Button>
-            <Button Name="CancelButton" Width="125" Height="50">Cancel</Button>
+            <Button Name="ApplyButton" Width="125" Height="50" Margin="0,0,10,0" Click="ApplyButton_Click">Apply</Button>
+            <Button Name="CancelButton" Width="125" Height="50" Click="CancelButton_Click">Cancel</Button>
         </StackPanel>
     </Grid>
 </Window>
