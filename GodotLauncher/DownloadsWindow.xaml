@@ -23,12 +23,12 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <TreeView Name="InstalledVersionsTree" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"></TreeView>
+        <TreeView Name="GodotVersionsTree" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"></TreeView>
 
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Center">
-            <Button Name="InstallButton" Height="50" Width="125" Margin="0,0,0,10">Install</Button>
-            <Button Name="OpenFolderButon" Height="50" Width="125" Margin="0,0,0,10">Open Folder</Button>
-            <Button Name="UninstallButton" Height="50" Width="125">Uninstall</Button>
+            <Button Name="InstallButton" Height="50" Width="125" Margin="0,0,0,10" IsEnabled="False">Install</Button>
+            <Button Name="OpenFolderButon" Height="50" Width="125" Margin="0,0,0,10" IsEnabled="False">Open Folder</Button>
+            <Button Name="UninstallButton" Height="50" Width="125" IsEnabled="False">Uninstall</Button>
         </StackPanel>
 
         <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">

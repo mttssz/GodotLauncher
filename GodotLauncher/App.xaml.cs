@@ -181,6 +181,9 @@ namespace GodotLauncher
 
                 return false;
             }
+
+            versionService.AllVersions.Reverse();
+
             return true;
         }
 

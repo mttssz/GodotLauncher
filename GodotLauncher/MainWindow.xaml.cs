@@ -24,12 +24,12 @@ namespace GodotLauncher
 
         private const string EMPTY_COMBOBOX_PLACEHOLDER = "No Godot versions found.";
 
-        public MainWindow(ApplicationConfig _config, GodotVersionService _versionService)
+        public MainWindow(ApplicationConfig config, GodotVersionService versionService)
         {
             InitializeComponent();
 
-            config = _config;
-            versionService = _versionService;
+            this.config = config;
+            this.versionService = versionService;
 
             FillComboboxWithData();
         }
@@ -78,10 +78,9 @@ namespace GodotLauncher
 
         private void DownloadsButton_Click(object sender, RoutedEventArgs e)
         {
-            var window = new DownloadsWindow
-            {
-                Owner = this,
-            };
+            var window = new DownloadsWindow(config, versionService);
+
+            window.Owner = this;
 
             window.ShowDialog();
         }

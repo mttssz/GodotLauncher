@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using GodotLauncher.Services;
+using GodotLauncher.DataClasses;
+
 namespace GodotLauncher
 {
     /// <summary>
@@ -19,9 +22,22 @@ namespace GodotLauncher
     /// </summary>
     public partial class DownloadsWindow : Window
     {
-        public DownloadsWindow()
+        private ApplicationConfig config;
+        private GodotVersionService versionService;
+
+        public DownloadsWindow(ApplicationConfig config, GodotVersionService versionService)
         {
             InitializeComponent();
+
+            this.config = config;
+            this.versionService = versionService;
+
+            BuildVersionsTree();
+        }
+
+        void BuildVersionsTree()
+        {
+            GodotVersionsTree.Items.Clear();
         }
     }
 }
