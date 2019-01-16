@@ -21,7 +21,7 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
@@ -35,9 +35,13 @@
             </StackPanel>
 
             <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                <CheckBox Name="InstalledCheckbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">Installed versions</CheckBox>
+                <CheckBox Name="NotInstalledCheckbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">Not installed versions</CheckBox>
                 <CheckBox Name="X32Checkbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">32 bit versions</CheckBox>
                 <CheckBox Name="X64Checkbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">64 bit versions</CheckBox>
+                <CheckBox Name="StandardCheckbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">Standard versions</CheckBox>
                 <CheckBox Name="MonoCheckbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">Mono versions</CheckBox>
+                <CheckBox Name="StableCheckbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">Stable versions</CheckBox>
                 <CheckBox Name="UnstableCheckbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">Unstable versions</CheckBox>
             </StackPanel>
         </Grid>

@@ -15,6 +15,11 @@ namespace GodotLauncher.DataClasses
         public bool ShowMonoVersions { get; set; }
         public bool ShowUnstableVersions { get; set; }
 
+        public bool ShowInstalledVersions { get; set; }
+        public bool ShowNotInstalledVersions { get; set; }
+        public bool ShowStableVersions { get; set; }
+        public bool ShowStandardVersions { get; set; }
+
         public DateTime LastUpdateChecked { get; set; }
         public int LastSelectedVersion { get; set; }
 

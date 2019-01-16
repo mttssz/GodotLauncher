@@ -58,6 +58,7 @@ namespace GodotLauncher
                 foreach (var v in versions)
                 {
                     string vName = $"Godot {v.VersionName} x{v.BitNum}";
+                    bool versionInstalled = CheckIfVersionIsInstalled(v.VersionId);
 
                     if (!config.Show32BitVersions && v.BitNum == 32)
                         continue;
@@ -67,11 +68,20 @@ namespace GodotLauncher
                         continue;
                     if (!config.ShowUnstableVersions && !v.IsStable)
                         continue;
+                    if (!config.ShowInstalledVersions && versionInstalled)
+                        continue;
+                    if (!config.ShowNotInstalledVersions && !versionInstalled)
+                        continue;
+                    if (!config.ShowStableVersions && v.IsStable)
+                        continue;
+                    if (!config.ShowStandardVersions && !v.IsMono)
+                        continue;
+
 
                     if (v.IsMono)
                         vName += " Mono";
 
-                    if (CheckIfVersionIsInstalled(v.VersionId))
+                    if (versionInstalled)
                         vName += " ✓";
 
                     var temp = new TreeViewItem();
@@ -92,6 +102,11 @@ namespace GodotLauncher
             X64Checkbox.IsChecked = config.Show64BitVersions;
             MonoCheckbox.IsChecked = config.ShowMonoVersions;
             UnstableCheckbox.IsChecked = config.ShowUnstableVersions;
+
+            InstalledCheckbox.IsChecked = config.ShowInstalledVersions;
+            StableCheckbox.IsChecked = config.ShowStableVersions;
+            StandardCheckbox.IsChecked = config.ShowStandardVersions;
+            NotInstalledCheckbox.IsChecked = config.ShowNotInstalledVersions;
         }
 
         private void GodotVersionsTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -128,6 +143,10 @@ namespace GodotLauncher
             config.Show64BitVersions = X64Checkbox.IsChecked.Value;
             config.ShowMonoVersions = MonoCheckbox.IsChecked.Value;
             config.ShowUnstableVersions = UnstableCheckbox.IsChecked.Value;
+            config.ShowInstalledVersions = InstalledCheckbox.IsChecked.Value;
+            config.ShowStableVersions = StableCheckbox.IsChecked.Value;
+            config.ShowStandardVersions = StandardCheckbox.IsChecked.Value;
+            config.ShowNotInstalledVersions = NotInstalledCheckbox.IsChecked.Value;
 
             BuildVersionsTree();
 
