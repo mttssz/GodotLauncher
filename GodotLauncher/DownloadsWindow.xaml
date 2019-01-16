@@ -4,39 +4,42 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GodotLauncher"
+        xmlns:extToolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Manage Installs" Height="450" Width="820"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         FontSize="18"
         Closing="Window_Closing">
-    <Grid Margin="5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="4*"></ColumnDefinition>
-            <ColumnDefinition Width="1*"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+    <extToolkit:BusyIndicator x:Name="BusyIndicator">
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-        <TreeView Name="GodotVersionsTree" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" SelectedItemChanged="GodotVersionsTree_SelectedItemChanged"></TreeView>
+            <TreeView Name="GodotVersionsTree" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" SelectedItemChanged="GodotVersionsTree_SelectedItemChanged"></TreeView>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Center">
-            <Button Name="InstallButton" Height="50" Width="125" Margin="0,0,0,10" IsEnabled="False" Click="InstallButton_Click">Install</Button>
-            <Button Name="OpenFolderButon" Height="50" Width="125" Margin="0,0,0,10" IsEnabled="False">Open Folder</Button>
-            <Button Name="UninstallButton" Height="50" Width="125" IsEnabled="False">Uninstall</Button>
-        </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Center">
+                <Button Name="InstallButton" Height="50" Width="125" Margin="0,0,0,10" IsEnabled="False" Click="InstallButton_Click">Install</Button>
+                <Button Name="OpenFolderButon" Height="50" Width="125" Margin="0,0,0,10" IsEnabled="False" Click="OpenFolderButon_Click">Open Folder</Button>
+                <Button Name="UninstallButton" Height="50" Width="125" IsEnabled="False" Click="UninstallButton_Click">Uninstall</Button>
+            </StackPanel>
 
-        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-            <CheckBox Name="X32Checkbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">32 bit versions</CheckBox>
-            <CheckBox Name="X64Checkbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">64 bit versions</CheckBox>
-            <CheckBox Name="MonoCheckbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">Mono versions</CheckBox>
-            <CheckBox Name="UnstableCheckbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">Unstable versions</CheckBox>
-        </StackPanel>
-    </Grid>
+            <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                <CheckBox Name="X32Checkbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">32 bit versions</CheckBox>
+                <CheckBox Name="X64Checkbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">64 bit versions</CheckBox>
+                <CheckBox Name="MonoCheckbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">Mono versions</CheckBox>
+                <CheckBox Name="UnstableCheckbox" FontSize="16" VerticalContentAlignment="Center" Margin="5,0,10,0" Click="Checkbox_ValueChanged">Unstable versions</CheckBox>
+            </StackPanel>
+        </Grid>
+    </extToolkit:BusyIndicator>
 </Window>

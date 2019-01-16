@@ -9,7 +9,7 @@ namespace GodotLauncher.Services
     /// Helper class to serialize and deserialize JSON object
     /// </summary>
     /// <typeparam name="T">The type of the object to serialize/deserialize</typeparam>
-    public class JsonConverter<T> where T : class
+    public class JsonConverterService<T> where T : class
     {
         /// <summary>
         /// Logger instance for the class
@@ -52,7 +52,9 @@ namespace GodotLauncher.Services
             {
                 var serializer = new JsonSerializer();
 
+#if DEBUG
                 serializer.Formatting = Formatting.Indented;
+#endif
 
                 serializer.Serialize(file, obj);
             }

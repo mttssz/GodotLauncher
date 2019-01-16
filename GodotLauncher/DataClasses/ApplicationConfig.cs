@@ -17,5 +17,7 @@ namespace GodotLauncher.DataClasses
 
         public DateTime LastUpdateChecked { get; set; }
         public int LastSelectedVersion { get; set; }
+
+        public int OnGodotLaunch { get; set; }
     }
 }

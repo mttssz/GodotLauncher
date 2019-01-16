@@ -9,7 +9,7 @@ using System.Windows.Threading;
 
 namespace GodotLauncher.Services
 {
-    public static class CommonUtils
+    public static class CommonUtilsService
     {
         public static void PopupExceptionMessage(string title, Exception ex)
         {
@@ -71,6 +71,11 @@ namespace GodotLauncher.Services
                 return true;
             }
             return false;
+        }
+
+        public static bool IsDirectoryEmpty(string path)
+        {
+            return !Directory.EnumerateFileSystemEntries(path).Any();
         }
     }
 }

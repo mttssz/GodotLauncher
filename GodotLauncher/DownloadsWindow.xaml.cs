@@ -2,6 +2,9 @@
 using GodotLauncher.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +15,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace GodotLauncher
 {
@@ -78,7 +80,7 @@ namespace GodotLauncher
                     count++;
                 }
 
-                if(count != 0)
+                if (count != 0)
                     GodotVersionsTree.Items.Add(rootNode);
             }
         }
@@ -135,22 +137,88 @@ namespace GodotLauncher
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            JsonConverter<ApplicationConfig>.Serialize(config, "config\\config.json");
+            JsonConverterService<ApplicationConfig>.Serialize(config, "config\\config.json");
         }
 
         private void InstallButton_Click(object sender, RoutedEventArgs e)
         {
-            if(config.GodotInstallLocation == String.Empty)
+            if (config.GodotInstallLocation == String.Empty)
             {
-                CommonUtils.PopupWarningMessage("No install location", "Please specify a Godot install location");
+                CommonUtilsService.PopupWarningMessage("No install location", "Please specify a Godot install location");
                 return;
             }
+
+            BusyIndicator.IsBusy = true;
 
             var temp = (KeyValuePair<int, string>)GodotVersionsTree.SelectedItem;
 
             var selectedVersion = versionService.AllVersions.FirstOrDefault(x => x.VersionId == temp.Key);
 
-            DownloadManager.DownloadFileSync(selectedVersion.VersionUrl, "temp\\godot.zip");
+            var worker = new BackgroundWorker();
+
+            worker.DoWork += (s, ev) => DownloadAndExtractVersion(selectedVersion);
+            worker.RunWorkerCompleted += (s, ev) => BusyIndicator.IsBusy = false;
+            worker.RunWorkerAsync();
+        }
+
+        private void DownloadAndExtractVersion(GodotVersion selectedVersion)
+        {
+            string fileName = DownloadManagerService.DownloadFileSync(selectedVersion.VersionUrl, "temp", true);
+
+            var extractedFiles = ZipService.UnzipFile(fileName, $"{config.GodotInstallLocation}\\{selectedVersion.VersionName}");
+
+            File.Delete(fileName);
+
+            foreach (var file in extractedFiles)
+            {
+                versionService.InstalledVersions.Add(new GodotVersionInstalled
+                {
+                    VersionId = selectedVersion.VersionId,
+                    VersionName = selectedVersion.VersionName,
+                    BitNum = selectedVersion.BitNum,
+                    IsMono = selectedVersion.IsMono,
+                    IsStable = selectedVersion.IsStable,
+                    InstallPath = file
+                });
+            }
+
+            JsonConverterService<List<GodotVersionInstalled>>.Serialize(versionService.InstalledVersions, $"{config.GodotInstallLocation}\\manifest.json");
+
+            Dispatcher.Invoke(new Action(() => BuildVersionsTree()));
+
+            Dispatcher.Invoke(new Action(() => CommonUtilsService.PopupInfoMessage("Info", "Godot version installed successfully!")));
+        }
+
+        private void OpenFolderButon_Click(object sender, RoutedEventArgs e)
+        {
+            var temp = (KeyValuePair<int, string>)GodotVersionsTree.SelectedItem;
+            var selectedVersion = versionService.AllVersions.FirstOrDefault(x => x.VersionId == temp.Key);
+            var installedVersion = versionService.InstalledVersions.FirstOrDefault(x => x.VersionId == selectedVersion.VersionId);
+
+            string installedPath = Path.GetDirectoryName(installedVersion.InstallPath);
+
+            Process.Start(installedPath);
+        }
+
+        private void UninstallButton_Click(object sender, RoutedEventArgs e)
+        {
+            var temp = (KeyValuePair<int, string>)GodotVersionsTree.SelectedItem;
+            var selectedVersion = versionService.AllVersions.FirstOrDefault(x => x.VersionId == temp.Key);
+            var installedVersion = versionService.InstalledVersions.FirstOrDefault(x => x.VersionId == selectedVersion.VersionId);
+
+            if(File.Exists(installedVersion.InstallPath))
+                File.Delete(installedVersion.InstallPath);
+
+            if(CommonUtilsService.IsDirectoryEmpty(Path.GetDirectoryName(installedVersion.InstallPath)))
+                Directory.Delete(Path.GetDirectoryName(installedVersion.InstallPath));
+
+            versionService.InstalledVersions.Remove(installedVersion);
+
+            JsonConverterService<List<GodotVersionInstalled>>.Serialize(versionService.InstalledVersions, $"{config.GodotInstallLocation}\\manifest.json");
+
+            BuildVersionsTree();
+
+            CommonUtilsService.PopupInfoMessage("Info", "Godot version uninstalled successfully!");
         }
     }
 }

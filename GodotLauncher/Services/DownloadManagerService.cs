@@ -7,24 +7,29 @@ using System.Net;
 
 namespace GodotLauncher.Services
 {
-    public static class DownloadManager
+    public static class DownloadManagerService
     {
 
-        public static void DownloadFileSync(string url)
+        public static string DownloadFileSync(string url)
         {
             string savedPath;
 
             savedPath = GetFileNameFromUrl(url);
 
-            DownloadFileSync(url, savedPath);
+            return DownloadFileSync(url, savedPath);
         }
 
-        public static void DownloadFileSync(string url, string savedPath)
+        public static string DownloadFileSync(string url, string savedPath, bool isFolder = false)
         {
+            if(isFolder)
+                savedPath += $"\\{GetFileNameFromUrl(url)}";
+
             using (var client = new WebClient())
             {
                 client.DownloadFile(url, savedPath);
             }
+
+            return savedPath;
         }
 
         public static string GetFileNameFromUrl(string url)

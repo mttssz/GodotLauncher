@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -59,10 +60,18 @@ namespace GodotLauncher
 
                 foreach(var version in versionService.InstalledVersions)
                 {
-                    InstalledVersionsCB.Items.Add(new KeyValuePair<int, string>(version.VersionId, version.VersionName));
+                    string versionName = $"Godot {version.VersionName} x{version.BitNum}";
+
+                    if(version.IsMono)
+                        versionName += " Mono";
+
+                    InstalledVersionsCB.Items.Add(new KeyValuePair<int, string>(version.VersionId, versionName));
                 }
 
                 InstalledVersionsCB.SelectedValue = config.LastSelectedVersion == -1 ? 0 : config.LastSelectedVersion;
+
+                if(InstalledVersionsCB.SelectedIndex == -1)
+                    InstalledVersionsCB.SelectedIndex = 0;
             }
         }
 
@@ -84,11 +93,25 @@ namespace GodotLauncher
             };
 
             window.ShowDialog();
+
+            FillComboboxWithData();
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            int selId = (int)InstalledVersionsCB.SelectedValue;
+            config.LastSelectedVersion = selId;
 
+            var selectedVersion = versionService.InstalledVersions.FirstOrDefault( x=> x.VersionId == selId);
+
+            Process.Start(selectedVersion.InstallPath);
+
+            if(config.OnGodotLaunch == Constants.CLOSE_ON_LAUNCH)
+                Close();
+            else if(config.OnGodotLaunch == Constants.MINIMIZE_ON_LAUNCH)
+                WindowState = WindowState.Minimized;
+
+            JsonConverterService<ApplicationConfig>.Serialize(config, "config\\config.json");
         }
     }
 }

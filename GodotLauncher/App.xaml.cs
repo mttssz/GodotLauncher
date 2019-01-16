@@ -24,7 +24,7 @@ namespace GodotLauncher
             logger.Error(e.Exception, "An unhandled exception occurred");
 
             // also show a popup informing the user of the exception
-            CommonUtils.PopupExceptionMessage("Unhandled exception", e.Exception);
+            CommonUtilsService.PopupExceptionMessage("Unhandled exception", e.Exception);
 
             // mark it as handled
             //e.Handled = true;
@@ -77,7 +77,7 @@ namespace GodotLauncher
             catch (Exception ex)
             {
                 logger.Error(ex);
-                CommonUtils.PopupExceptionMessage("I/O error", ex);
+                CommonUtilsService.PopupExceptionMessage("I/O error", ex);
 
                 return false;
             }
@@ -98,7 +98,7 @@ namespace GodotLauncher
             catch (Exception ex)
             {
                 logger.Error(ex);
-                CommonUtils.PopupExceptionMessage("I/O error", ex);
+                CommonUtilsService.PopupExceptionMessage("I/O error", ex);
 
                 return false;
             }
@@ -124,15 +124,15 @@ namespace GodotLauncher
                         LastSelectedVersion = -1,
                     };
 
-                    JsonConverter<ApplicationConfig>.Serialize(config, configFile);
+                    JsonConverterService<ApplicationConfig>.Serialize(config, configFile);
                 }
 
-                config = JsonConverter<ApplicationConfig>.Deserialize(configFile);
+                config = JsonConverterService<ApplicationConfig>.Deserialize(configFile);
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
-                CommonUtils.PopupExceptionMessage("Error reading config", ex);
+                CommonUtilsService.PopupExceptionMessage("Error reading config", ex);
 
                 return false;
             }
@@ -151,12 +151,12 @@ namespace GodotLauncher
             {
                 url = FindResource("VersionsFileUrl").ToString();
 
-                DownloadManager.DownloadFileSync(url, "config\\versions.json");
+                DownloadManagerService.DownloadFileSync(url, "config\\versions.json");
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
-                CommonUtils.PopupExceptionMessage("Error while downloading versions", ex);
+                CommonUtilsService.PopupExceptionMessage("Error while downloading versions", ex);
             }
 
             return true;
@@ -166,18 +166,18 @@ namespace GodotLauncher
         {
             try
             {
-                versionService.AllVersions = JsonConverter<List<GodotVersion>>.Deserialize("config\\versions.json");
+                versionService.AllVersions = JsonConverterService<List<GodotVersion>>.Deserialize("config\\versions.json");
 
                 string installedManifest = $"{config.GodotInstallLocation}\\manifest.json";
                 if (config.GodotInstallLocation != String.Empty && File.Exists(installedManifest))
-                    versionService.InstalledVersions = JsonConverter<List<GodotVersionInstalled>>.Deserialize(installedManifest);
+                    versionService.InstalledVersions = JsonConverterService<List<GodotVersionInstalled>>.Deserialize(installedManifest);
                 else
                     versionService.InstalledVersions = new List<GodotVersionInstalled>();
             }
             catch(Exception ex)
             {
                 logger.Error(ex);
-                CommonUtils.PopupExceptionMessage("Error loading versions", ex);
+                CommonUtilsService.PopupExceptionMessage("Error loading versions", ex);
 
                 return false;
             }

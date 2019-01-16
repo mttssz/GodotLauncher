@@ -34,6 +34,7 @@ namespace GodotLauncher
             this.versionService = versionService;
 
             FillTextbox();
+            FillComboBox();
         }
 
         private void FillTextbox()
@@ -44,11 +45,24 @@ namespace GodotLauncher
                 GodotInstallLocationTextbox.Text = config.GodotInstallLocation;
         }
 
+        private void FillComboBox()
+        {
+            OnGodotLaunchComboBox.SelectedValuePath = "Key";
+            OnGodotLaunchComboBox.DisplayMemberPath = "Value";
+
+            OnGodotLaunchComboBox.Items.Add(new KeyValuePair<int,string>(Constants.CLOSE_ON_LAUNCH, "Close GodotLauncher"));
+            OnGodotLaunchComboBox.Items.Add(new KeyValuePair<int,string>(Constants.MINIMIZE_ON_LAUNCH, "Minimize GodotLauncher"));
+            OnGodotLaunchComboBox.Items.Add(new KeyValuePair<int,string>(Constants.DO_NOTHING_ON_LAUNCH, "Do nothing"));
+
+            OnGodotLaunchComboBox.SelectedValue = config.OnGodotLaunch;
+        }
+
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
             config.GodotInstallLocation = GodotInstallLocationTextbox.Text;
+            config.OnGodotLaunch = (int)OnGodotLaunchComboBox.SelectedValue;
 
-            JsonConverter<ApplicationConfig>.Serialize(config, "config\\config.json");
+            JsonConverterService<ApplicationConfig>.Serialize(config, "config\\config.json");
 
             Close();
         }
@@ -79,7 +93,7 @@ namespace GodotLauncher
                     }
                 }
 
-                versionService.InstalledVersions = JsonConverter<List<GodotVersionInstalled>>.Deserialize(manifestFile);
+                versionService.InstalledVersions = JsonConverterService<List<GodotVersionInstalled>>.Deserialize(manifestFile);
 
                 GodotInstallLocationTextbox.Text = path;
             }
