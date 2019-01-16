@@ -227,9 +227,19 @@ namespace GodotLauncher
 
             if (File.Exists(installedVersion.InstallPath))
                 File.Delete(installedVersion.InstallPath);
+            string parentDir;
+            if (installedVersion.IsMono)
+            {
+                string monoDirectory = Path.GetDirectoryName(installedVersion.InstallPath);
+                parentDir = Path.GetDirectoryName(monoDirectory);
 
-            if (CommonUtilsService.IsDirectoryEmpty(Path.GetDirectoryName(installedVersion.InstallPath)))
-                Directory.Delete(Path.GetDirectoryName(installedVersion.InstallPath));
+                Directory.Delete(monoDirectory, true);
+            }
+            else
+                parentDir = Path.GetDirectoryName(installedVersion.InstallPath);
+
+            if (CommonUtilsService.IsDirectoryEmpty(parentDir))
+                Directory.Delete(parentDir, true);
 
             versionService.InstalledVersions.Remove(installedVersion);
 

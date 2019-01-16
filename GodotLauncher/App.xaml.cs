@@ -139,6 +139,16 @@ namespace GodotLauncher
 
                     JsonConverterService<ApplicationConfig>.Serialize(config, configFile);
                 }
+
+                if(config.GodotInstallLocation != String.Empty && !Directory.Exists(config.GodotInstallLocation))
+                {
+                    Directory.CreateDirectory(config.GodotInstallLocation);
+
+                    using (var file = File.CreateText($"{config.GodotInstallLocation}\\manifest.json"))
+                    {
+                        file.Write("[]");
+                    }
+                }
             }
             catch (Exception ex)
             {
