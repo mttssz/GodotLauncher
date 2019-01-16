@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GodotLauncher"
         mc:Ignorable="d"
-        Title="Configuration" Height="300" Width="610"
+        Title="Configuration" Height="424" Width="610"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         FontSize="18">
@@ -14,6 +14,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
@@ -24,11 +25,25 @@
                 <TextBox Name="GodotInstallLocationTextbox" Height="50" VerticalContentAlignment="Center" IsReadOnly="True" Foreground="DarkGray" Padding="10,0,0,0"></TextBox>
             </DockPanel>
         </StackPanel>
-        <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="2" Orientation="Vertical" >
             <TextBlock>On Godot Launch:</TextBlock>
             <ComboBox Name="OnGodotLaunchComboBox" Height="50" VerticalContentAlignment="Center"></ComboBox>
         </StackPanel>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="3" Orientation="Vertical" VerticalAlignment="Bottom">
+            <TextBlock>Proxy settings:</TextBlock>
+            <DockPanel LastChildFill="True">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Name="ProxyUrlLabel">URL:</TextBlock>
+                    <TextBox Name="ProxyUrlTextBox" Height="50" Width="400" VerticalContentAlignment="Center" IsEnabled="True"></TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Name="ProxyPortLabel" Margin="10,0,0,0">Port:</TextBlock>
+                    <TextBox Name="ProxyPortTextBox" Height="50" VerticalContentAlignment="Center" IsEnabled="True" Margin="10,0,0,0"></TextBox>
+                </StackPanel>
+            </DockPanel>
+            <CheckBox Name="UseProxyCheckBox" VerticalContentAlignment="Center" Checked="UseProxyCheckBox_Checked" Unchecked="UseProxyCheckBox_Unchecked">Use proxy</CheckBox>
+        </StackPanel>
+        <StackPanel Grid.Row="4" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
             <Button Name="ApplyButton" Width="125" Height="50" Margin="0,0,10,0" Click="ApplyButton_Click">Apply</Button>
             <Button Name="CancelButton" Width="125" Height="50" Click="CancelButton_Click">Cancel</Button>
         </StackPanel>

@@ -16,6 +16,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+// TODO: add option to use proxies for downloads
+
 namespace GodotLauncher
 {
     /// <summary>
@@ -35,6 +37,7 @@ namespace GodotLauncher
 
             FillTextbox();
             FillComboBox();
+            FillProxySettings();
         }
 
         private void FillTextbox()
@@ -50,18 +53,59 @@ namespace GodotLauncher
             OnGodotLaunchComboBox.SelectedValuePath = "Key";
             OnGodotLaunchComboBox.DisplayMemberPath = "Value";
 
-            OnGodotLaunchComboBox.Items.Add(new KeyValuePair<int,string>(Constants.CLOSE_ON_LAUNCH, "Close GodotLauncher"));
-            OnGodotLaunchComboBox.Items.Add(new KeyValuePair<int,string>(Constants.MINIMIZE_ON_LAUNCH, "Minimize GodotLauncher"));
-            OnGodotLaunchComboBox.Items.Add(new KeyValuePair<int,string>(Constants.DO_NOTHING_ON_LAUNCH, "Do nothing"));
+            OnGodotLaunchComboBox.Items.Add(new KeyValuePair<int, string>(Constants.CLOSE_ON_LAUNCH, "Close GodotLauncher"));
+            OnGodotLaunchComboBox.Items.Add(new KeyValuePair<int, string>(Constants.MINIMIZE_ON_LAUNCH, "Minimize GodotLauncher"));
+            OnGodotLaunchComboBox.Items.Add(new KeyValuePair<int, string>(Constants.DO_NOTHING_ON_LAUNCH, "Do nothing"));
 
             OnGodotLaunchComboBox.SelectedValue = config.OnGodotLaunch;
+        }
+
+        private void FillProxySettings()
+        {
+            UseProxyCheckBox.IsChecked = config.UseProxy;
+
+            ProxyPortTextBox.Text = config.ProxyPort.ToString();
+            ProxyUrlTextBox.Text = config.ProxyUrl;
+
+            ProxyPortTextBox.IsEnabled = UseProxyCheckBox.IsChecked.Value;
+            ProxyUrlTextBox.IsEnabled = UseProxyCheckBox.IsChecked.Value;
+
+            ProxyPortLabel.Foreground = UseProxyCheckBox.IsChecked.Value ? Brushes.Black : Brushes.DarkGray;
+            ProxyUrlLabel.Foreground = UseProxyCheckBox.IsChecked.Value ? Brushes.Black : Brushes.DarkGray;
         }
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
             config.GodotInstallLocation = GodotInstallLocationTextbox.Text;
             config.OnGodotLaunch = (int)OnGodotLaunchComboBox.SelectedValue;
+            bool proxy = UseProxyCheckBox.IsChecked.Value;
 
+            if (proxy)
+            {
+                if (ProxyPortTextBox.Text == String.Empty || ProxyUrlTextBox.Text == String.Empty)
+                {
+                    CommonUtilsService.PopupWarningMessage("Invalid values", "Please input both an URL and a port number for the proxy.");
+                    return;
+                }
+
+                if (Uri.TryCreate(ProxyUrlTextBox.Text, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+                    config.ProxyUrl = ProxyUrlTextBox.Text;
+                else
+                {
+                    CommonUtilsService.PopupWarningMessage("Invalid values", "Please input a valid URL for the proxy.");
+                    return;
+                }
+
+                if (Int32.TryParse(ProxyPortTextBox.Text, out int portNum))
+                    config.ProxyPort = portNum;
+                else
+                {
+                    CommonUtilsService.PopupWarningMessage("Invalid values", "Please input a valid port for the proxy.");
+                    return;
+                }
+            }
+
+            config.UseProxy = proxy;
             JsonConverterService<ApplicationConfig>.Serialize(config, "config\\config.json");
 
             Close();
@@ -97,6 +141,28 @@ namespace GodotLauncher
 
                 GodotInstallLocationTextbox.Text = path;
             }
+        }
+
+        private void UseProxyCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            config.UseProxy = true;
+
+            ProxyUrlTextBox.IsEnabled = true;
+            ProxyPortTextBox.IsEnabled = true;
+
+            ProxyUrlLabel.Foreground = Brushes.Black;
+            ProxyPortLabel.Foreground = Brushes.Black;
+        }
+
+        private void UseProxyCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            config.UseProxy = false;
+
+            ProxyUrlTextBox.IsEnabled = false;
+            ProxyPortTextBox.IsEnabled = false;
+
+            ProxyUrlLabel.Foreground = Brushes.DarkGray;
+            ProxyPortLabel.Foreground = Brushes.DarkGray;
         }
     }
 }

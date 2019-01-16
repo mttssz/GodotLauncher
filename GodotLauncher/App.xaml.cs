@@ -122,12 +122,23 @@ namespace GodotLauncher
                         ShowUnstableVersions = false,
                         LastUpdateChecked = DateTime.Now,
                         LastSelectedVersion = -1,
+                        OnGodotLaunch = Constants.DO_NOTHING_ON_LAUNCH,
+                        UseProxy = false,
+                        ProxyUrl = String.Empty,
+                        ProxyPort = 0,
                     };
 
                     JsonConverterService<ApplicationConfig>.Serialize(config, configFile);
                 }
 
                 config = JsonConverterService<ApplicationConfig>.Deserialize(configFile);
+
+                if(config.UseProxy && (config.ProxyPort == 0 || config.ProxyUrl == String.Empty))
+                {
+                    config.UseProxy = false;
+
+                    JsonConverterService<ApplicationConfig>.Serialize(config, configFile);
+                }
             }
             catch (Exception ex)
             {
@@ -151,13 +162,19 @@ namespace GodotLauncher
             {
                 url = FindResource("VersionsFileUrl").ToString();
 
-                DownloadManagerService.DownloadFileSync(url, "config\\versions.json");
+                if(config.UseProxy)
+                    DownloadManagerService.DownloadFileSyncWithProxy(url, "config\\versions.json", config.ProxyUrl, config.ProxyPort);
+                else
+                    DownloadManagerService.DownloadFileSync(url, "config\\versions.json");
+
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
                 CommonUtilsService.PopupExceptionMessage("Error while downloading versions", ex);
             }
+
+            config.LastUpdateChecked = DateTime.Now;
 
             return true;
         }

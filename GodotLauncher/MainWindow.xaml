@@ -14,7 +14,8 @@
         <Image x:Key="StartIcon" Source="Images/start.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
         <Image x:Key="WrenchIcon" Source="Images/wrench.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
         <Image x:Key="DownloadsIcon" Source="Images/downloads.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
-
+        <Image x:Key="AboutIcon" Source="Images/about.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+        
         <Image x:Key="StartIconInactive" Source="Images/start_inactive.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
         <Image x:Key="WrenchIconInactive" Source="Images/wrench_inactive.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
         <Image x:Key="DownloadsIconInactive" Source="Images/downloads_inactive.png" RenderOptions.BitmapScalingMode="HighQuality"></Image>
@@ -39,16 +40,18 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="6*"></RowDefinition>
+
+            <RowDefinition Height="8*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Image Source="{StaticResource GodotLogo}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" VerticalAlignment="Top" Margin="0,10,0,0"></Image>
-        <Button Name="ConfigButton" Grid.Row="1" Grid.Column="2" Click="ConfigButton_Click" Content="{StaticResource WrenchIcon}"></Button>
-        <Button Name="DownloadsButton" Grid.Row="2" Grid.Column="2" VerticalAlignment="Top" Click="DownloadsButton_Click" Content="{StaticResource DownloadsIcon}"></Button>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2">
+            <Button Name="ConfigButton" Click="ConfigButton_Click" Content="{StaticResource WrenchIcon}"></Button>
+            <Button Name="DownloadsButton" Click="DownloadsButton_Click" Content="{StaticResource DownloadsIcon}" Margin="0,10,0,0"></Button>
+            <Button Name="AboutButton" Click="AboutButton_Click" Content="{StaticResource AboutIcon}" Margin="0,10,0,0"></Button>
+        </StackPanel>
         <Button Name="StartButton" Grid.Row="4" Grid.Column="2" Click="StartButton_Click" Content="{StaticResource StartIcon}"></Button>
 
         <ComboBox Name="InstalledVersionsCB" Grid.Row="4" Grid.Column="1" Height="50" SelectedValuePath="Key" DisplayMemberPath="Value" VerticalContentAlignment="Center"></ComboBox>

@@ -19,5 +19,9 @@ namespace GodotLauncher.DataClasses
         public int LastSelectedVersion { get; set; }
 
         public int OnGodotLaunch { get; set; }
+
+        public bool UseProxy { get; set; }
+        public string ProxyUrl { get; set; }
+        public int ProxyPort { get; set; }
     }
 }

@@ -23,6 +23,7 @@ namespace GodotLauncher
     /// </summary>
     public partial class DownloadsWindow : Window
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private ApplicationConfig config;
         private GodotVersionService versionService;
 
@@ -157,13 +158,31 @@ namespace GodotLauncher
             var worker = new BackgroundWorker();
 
             worker.DoWork += (s, ev) => DownloadAndExtractVersion(selectedVersion);
-            worker.RunWorkerCompleted += (s, ev) => BusyIndicator.IsBusy = false;
+            worker.RunWorkerCompleted += (s, ev) =>
+            {
+                if (ev.Error != null)
+                {
+                    logger.Error(ev.Error);
+                    CommonUtilsService.PopupExceptionMessage("Error while downloading Godot", ev.Error);
+                }
+
+                BusyIndicator.IsBusy = false;
+            };
             worker.RunWorkerAsync();
         }
 
         private void DownloadAndExtractVersion(GodotVersion selectedVersion)
         {
-            string fileName = DownloadManagerService.DownloadFileSync(selectedVersion.VersionUrl, "temp", true);
+            string fileName;
+            try
+            {
+                fileName = config.UseProxy ? DownloadManagerService.DownloadFileSyncWithProxy(selectedVersion.VersionUrl, "temp", config.ProxyUrl, config.ProxyPort, true) :
+                DownloadManagerService.DownloadFileSync(selectedVersion.VersionUrl, "temp", true);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             var extractedFiles = ZipService.UnzipFile(fileName, $"{config.GodotInstallLocation}\\{selectedVersion.VersionName}");
 
@@ -178,7 +197,7 @@ namespace GodotLauncher
                     BitNum = selectedVersion.BitNum,
                     IsMono = selectedVersion.IsMono,
                     IsStable = selectedVersion.IsStable,
-                    InstallPath = file
+                    InstallPath = file.Replace(@"/", @"\\"),
                 });
             }
 
@@ -206,10 +225,10 @@ namespace GodotLauncher
             var selectedVersion = versionService.AllVersions.FirstOrDefault(x => x.VersionId == temp.Key);
             var installedVersion = versionService.InstalledVersions.FirstOrDefault(x => x.VersionId == selectedVersion.VersionId);
 
-            if(File.Exists(installedVersion.InstallPath))
+            if (File.Exists(installedVersion.InstallPath))
                 File.Delete(installedVersion.InstallPath);
 
-            if(CommonUtilsService.IsDirectoryEmpty(Path.GetDirectoryName(installedVersion.InstallPath)))
+            if (CommonUtilsService.IsDirectoryEmpty(Path.GetDirectoryName(installedVersion.InstallPath)))
                 Directory.Delete(Path.GetDirectoryName(installedVersion.InstallPath));
 
             versionService.InstalledVersions.Remove(installedVersion);

@@ -83,6 +83,8 @@ namespace GodotLauncher
             };
 
             window.ShowDialog();
+
+            FillComboboxWithData();
         }
 
         private void DownloadsButton_Click(object sender, RoutedEventArgs e)
@@ -112,6 +114,11 @@ namespace GodotLauncher
                 WindowState = WindowState.Minimized;
 
             JsonConverterService<ApplicationConfig>.Serialize(config, "config\\config.json");
+        }
+
+        private void AboutButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
