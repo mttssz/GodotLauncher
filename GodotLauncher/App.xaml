@@ -1,13 +1,9 @@
-﻿<Application x:Class="GodotLauncher.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:GodotLauncher"
-             xmlns:System="clr-namespace:System;assembly=mscorlib"
-             DispatcherUnhandledException="App_OnDispatcherUnhandledException"
-             Startup="App_OnStartup"
-             Exit="App_OnExit">
-    <Application.Resources>
-        <System:String x:Key="VersionsFileUrl">https://raw.githubusercontent.com/mttssz/GodotLauncher/master/versions.json</System:String>
-        <System:String x:Key="GodotLauncherVersion">1.0.0</System:String>
-    </Application.Resources>
+<Application x:Class="GodotLauncher.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:GodotLauncher" xmlns:System="clr-namespace:System;assembly=mscorlib" DispatcherUnhandledException="App_OnDispatcherUnhandledException" Startup="App_OnStartup" Exit="App_OnExit" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" d1p1:Ignorable="d" xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
+  <Application.Resources>
+    <System:String x:Key="VersionsFileUrl">https://raw.githubusercontent.com/mttssz/GodotLauncher/master/versions.json</System:String>
+    <System:String x:Key="GodotLauncherVersion">1.0.0</System:String>
+    <ResourceDictionary>
+      <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:GodotLauncher.ViewModel" />
+    </ResourceDictionary>
+  </Application.Resources>
 </Application>

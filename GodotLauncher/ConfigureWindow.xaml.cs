@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using GodotLauncher.ViewModels;
 
 // TODO: add option to use proxies for downloads
 
@@ -28,6 +29,8 @@ namespace GodotLauncher
         private ApplicationConfig config;
         private GodotVersionService versionService;
 
+        private ConfigureViewModel viewModel = new ConfigureViewModel();
+
         public ConfigureWindow(ApplicationConfig config, GodotVersionService versionService)
         {
             InitializeComponent();
@@ -35,9 +38,11 @@ namespace GodotLauncher
             this.config = config;
             this.versionService = versionService;
 
-            FillTextbox();
-            FillComboBox();
-            FillProxySettings();
+            DataContext = viewModel;
+
+            //FillTextbox();
+            //FillComboBox();
+            //FillProxySettings();
         }
 
         private void FillTextbox()
