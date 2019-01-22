@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
+using System.Windows.Media;
 using GodotLauncher.Classes;
 
 namespace GodotLauncher.ViewModels
@@ -51,8 +51,15 @@ namespace GodotLauncher.ViewModels
             get { return m_IsProxyEnabled; }
             set
             {
-                if ( m_IsProxyEnabled != value )
-                    SetProperty( ref m_IsProxyEnabled, value );
+                if (m_IsProxyEnabled != value)
+                {
+                    SetProperty(ref m_IsProxyEnabled, value);
+
+                    if (m_IsProxyEnabled)
+                        ForegroundBrush = Brushes.Black;
+                    else
+                        ForegroundBrush = Brushes.DarkGray;
+                }
             }
         }
 
@@ -88,12 +95,26 @@ namespace GodotLauncher.ViewModels
 
         #endregion
 
+        #region ForegroundBrush
+
+        private Brush m_ForegroundBrush = Brushes.DarkGray;
+        public Brush ForegroundBrush
+        {
+            get { return m_ForegroundBrush; }
+            set
+            {
+                if (m_ForegroundBrush != value)
+                    SetProperty(ref m_ForegroundBrush, value);
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Commands
 
         private DelegateCommand m_SelectGodotInstallLocation = null;
-
         public DelegateCommand SelectGodotInstallLocation
         {
             get
@@ -102,7 +123,7 @@ namespace GodotLauncher.ViewModels
             }
         }
 
-        private void _SelectGodotInstallLocationCommandExecute()
+        private void _SelectGodotInstallLocationCommandExecute(object parameter)
         {
 
         }

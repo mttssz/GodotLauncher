@@ -37,12 +37,12 @@
             <TextBlock>Proxy settings:</TextBlock>
             <DockPanel LastChildFill="True">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Name="ProxyUrlLabel">URL:</TextBlock>
-                    <TextBox Name="ProxyUrlTextBox" Height="50" Width="400" VerticalContentAlignment="Center" IsEnabled="{Binding IsProxyEnabled, Mode=OneWay}"></TextBox>
+                    <TextBlock Name="ProxyUrlLabel" Foreground="{Binding ForegroundBrush, Mode=TwoWay}">URL:</TextBlock>
+                    <TextBox Name="ProxyUrlTextBox" Height="50" Width="400" VerticalContentAlignment="Center" IsEnabled="{Binding IsProxyEnabled, Mode=OneWay}" Foreground="{Binding ForegroundBrush, Mode=TwoWay}"></TextBox>
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Name="ProxyPortLabel" Margin="10,0,0,0">Port:</TextBlock>
-                    <TextBox Name="ProxyPortTextBox" Height="50" VerticalContentAlignment="Center" IsEnabled="{Binding IsProxyEnabled, Mode=OneWay}" Margin="10,0,0,0"></TextBox>
+                    <TextBlock Name="ProxyPortLabel" Margin="10,0,0,0" Foreground="{Binding ForegroundBrush, Mode=TwoWay}">Port:</TextBlock>
+                    <TextBox Name="ProxyPortTextBox" Height="50" VerticalContentAlignment="Center" IsEnabled="{Binding IsProxyEnabled, Mode=OneWay}" Margin="10,0,0,0" Foreground="{Binding ForegroundBrush, Mode=TwoWay}"></TextBox>
                 </StackPanel>
             </DockPanel>
             <CheckBox Name="UseProxyCheckBox" VerticalContentAlignment="Center" IsChecked="{Binding IsProxyEnabled, Mode=TwoWay}">Use proxy</CheckBox>
