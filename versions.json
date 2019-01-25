@@ -682,5 +682,41 @@
 		"IsMono": "true",
 		"IsStable": "false",
 		"ChangelogUrl": ""
+	},
+	{
+		"VersionId": "77",
+		"VersionName": "3.1_beta2",
+		"VersionUrl": "https://downloads.tuxfamily.org/godotengine/3.1/beta2/Godot_v3.1-beta2_win32.exe.zip",
+		"BitNum": "32",
+		"IsMono": "false",
+		"IsStable": "false",
+		"ChangelogUrl": ""
+	},
+	{
+		"VersionId": "78",
+		"VersionName": "3.1_beta2",
+		"VersionUrl": "https://downloads.tuxfamily.org/godotengine/3.1/beta2/Godot_v3.1-beta2_win64.exe.zip",
+		"BitNum": "64",
+		"IsMono": "false",
+		"IsStable": "false",
+		"ChangelogUrl": ""
+	},
+	{
+		"VersionId": "79",
+		"VersionName": "3.1_beta2",
+		"VersionUrl": "https://downloads.tuxfamily.org/godotengine/3.1/beta2/mono/Godot_v3.1-beta2_mono_win32.zip",
+		"BitNum": "32",
+		"IsMono": "true",
+		"IsStable": "false",
+		"ChangelogUrl": ""
+	},
+	{
+		"VersionId": "80",
+		"VersionName": "3.1_beta2",
+		"VersionUrl": "https://downloads.tuxfamily.org/godotengine/3.1/beta2/mono/Godot_v3.1-beta2_mono_win64.zip",
+		"BitNum": "64",
+		"IsMono": "true",
+		"IsStable": "false",
+		"ChangelogUrl": ""
 	}
 ]
